@@ -1,0 +1,51 @@
+name: Build maven project
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: What build agent to use
+        type: string
+        required: true
+      ref:
+        description: Which branch to check out
+        type: string
+        required: false
+      java-version:
+        description: The Java version to setup
+        type: string
+        required: true
+      maven-version:
+        description: The Maven version to setup (only used on self-hosted)
+        type: string
+        required: false
+        default: '3.8.2'
+jobs:
+  build:
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: ${{ inputs.java-version }}
+
+      - name: setup Maven
+        if: ${{ inputs.maven-version != '' }}
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: ${{ inputs.maven-version }}
+
+      - name: Build artifact
+        run: sh ./ci/build.sh
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: artifact.tgz
+          if-no-files-found: error
