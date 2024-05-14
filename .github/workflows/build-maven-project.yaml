@@ -20,7 +20,7 @@ on:
         required: false
         default: '3.8.2'
     secrets:
-      GITHUB_TOKEN:
+      GITHUB_TOKEN_1:
         description: Token to checkout the code
         required: true
 
@@ -28,7 +28,7 @@ jobs:
   build:
     runs-on: ${{ inputs.runner }}
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_1 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
