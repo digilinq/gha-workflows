@@ -7,7 +7,7 @@ outputs:
     description: The project configuration
     value: ${{ steps.extract-config.outputs.config }}
 
-job:
+jobs:
   config:
     runs-on: ubuntu-latest
     steps:
