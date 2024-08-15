@@ -38,6 +38,9 @@ jobs:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
 
+      - name: Print maven version
+        run: echo "Maven version is ${{ inputs.maven-version != '' && inputs.maven-version || 'not defined' }}"
+
       - name: Setup Maven ${{ inputs.maven-version }}
         if: ${{ inputs.maven-version != '' }}
         uses: stCarolas/setup-maven@v4.5
