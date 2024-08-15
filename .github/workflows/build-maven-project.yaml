@@ -19,6 +19,21 @@ on:
         type: string
         required: false
         default: '3.8.2'
+      docker-file:
+        description: The path to the Dockerfile
+        type: string
+        required: false
+        default: 'deployment/Dockerfile'
+      artifact-name:
+        description: The name of the artifact
+        type: string
+        required: false
+        default: 'artifact'
+      artifact-path:
+        description: The path to the artifact
+        type: string
+        required: false
+        default: 'artifact.tgz'
 
 jobs:
   build:
@@ -37,7 +52,7 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
-          cache: maven
+#          cache: maven
 
       - name: Setup Maven ${{ inputs.maven-version != '' && inputs.maven-version || '3.8.2' }}
 #        if: ${{ inputs.maven-version != '' }}
@@ -57,9 +72,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Copy artifact and Dockerfile
+        run: |
+          mkdir staging
+          cp ${{ inputs.artifact-path }} staging
+          cp ${{ inputs.docker-file }} staging
+
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build
-          path: artifact.tgz
+          name: ${{ inputs.artifact-name }}
+          path: staging
           if-no-files-found: error
