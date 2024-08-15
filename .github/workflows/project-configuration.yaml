@@ -1,0 +1,29 @@
+name: Populate project configuration
+on:
+  workflow_call:
+
+outputs:
+  config:
+    description: The project configuration
+    value: ${{ steps.extract-config.outputs.config }}
+
+job:
+  config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract project configuration
+        id: extract-config
+        run: |
+          echo "config=$(jq -c '.' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
+
+#      - name: Determine effective workflow configuration
+#        uses: RoyalAholdDelhaize/tech-nl-github-workflows/.github/actions/effective-config@v1
+#        id: effective-config
+#
+#      - name: Create or update project configuration
+#        run: |
+#          echo "${{ steps.effective-config.outputs.config }}" > .github/workflows/project-configuration.yaml
+#        shell: bash
