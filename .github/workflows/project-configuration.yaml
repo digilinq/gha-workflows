@@ -2,10 +2,10 @@ name: Populate project configuration
 on:
   workflow_call:
 
-outputs:
-  config:
-    description: The project configuration
-    value: ${{ steps.extract-config.outputs.config }}
+  outputs:
+    config:
+      description: The project configuration
+      value: ${{ steps.extract-config.outputs.config }}
 
 jobs:
   config:
