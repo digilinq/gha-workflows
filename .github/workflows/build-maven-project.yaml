@@ -69,8 +69,8 @@ jobs:
           echo "Running $script"
           git config --global --add safe.directory '*'
           sh "$script"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Copy artifact and Dockerfile
         run: |
