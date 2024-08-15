@@ -21,29 +21,7 @@ on:
         default: '3.8.2'
 
 jobs:
-  config:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: setup java ${{ inputs.java-version }}
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: ${{ inputs.java-version }}
-
-      - name: setup Maven ${{ inputs.maven-version }}
-        if: ${{ inputs.maven-version != '' }}
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: ${{ inputs.maven-version }}
-
   build:
-    needs:
-      - config
     runs-on: ${{ inputs.runner }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,13 +32,13 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: setup java
+      - name: Setup Java ${{ inputs.java-version }}
         uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
 
-      - name: setup Maven
+      - name: Setup Maven ${{ inputs.maven-version }}
         if: ${{ inputs.maven-version != '' }}
         uses: stCarolas/setup-maven@v4.5
         with:
