@@ -1,0 +1,43 @@
+name: Populate project configuration
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Which ref to check out'
+        type: string
+        required: false
+    outputs:
+      config:
+        description: The project configuration
+        value: ${{ jobs.config.outputs.config }}
+      java-version:
+        description: The Java version
+        value: ${{ jobs.config.outputs.java-version }}
+      maven-version:
+        description: The Maven version
+        value: ${{ jobs.config.outputs.maven-version }}
+
+jobs:
+  config:
+    runs-on: ubuntu-latest
+    outputs:
+      config: ${{ steps.extract-config.outputs.config }}
+      java-version: ${{ fromJson(steps.extract-config.outputs.config).java.version }}
+      maven-version: ${{ fromJson(steps.extract-config.outputs.config).maven.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract project configuration
+        id: extract-config
+        run: |
+          echo "config=$(jq -c '.' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
+
+#      - name: Determine effective workflow configuration
+#        uses: RoyalAholdDelhaize/tech-nl-github-workflows/.github/actions/effective-config@v1
+#        id: effective-config
+#
+#      - name: Create or update project configuration
+#        run: |
+#          echo "${{ steps.effective-config.outputs.config }}" > .github/workflows/project-configuration.yaml
+#        shell: bash

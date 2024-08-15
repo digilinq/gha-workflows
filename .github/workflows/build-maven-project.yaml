@@ -32,17 +32,17 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: setup java
+      - name: Setup Java ${{ inputs.java-version }}
         uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
 
-      - name: setup Maven
-        if: ${{ inputs.maven-version != '' }}
+      - name: Setup Maven ${{ inputs.maven-version }}
+#        if: ${{ inputs.maven-version != '' }}
         uses: stCarolas/setup-maven@v4.5
         with:
-          maven-version: ${{ inputs.maven-version }}
+          maven-version: ${{ inputs.maven-version != '' && inputs.maven-version || '3.8.2' }}
 
       - name: Build artifact
         run: sh ./ci/build.sh
