@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       config: ${{ steps.extract-config.outputs.config }}
-      JAVA_VERSION: ${{ fromJson(steps.extract-config.outputs.config).java.version }}
+      java-version: ${{ fromJson(steps.extract-config.outputs.config).java.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
