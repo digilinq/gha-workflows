@@ -10,6 +10,9 @@ on:
       config:
         description: The project configuration
         value: ${{ jobs.config.outputs.config }}
+      java-version:
+        description: The Java version
+        value: ${{ jobs.config.outputs.java-version }}
 
 jobs:
   config:
