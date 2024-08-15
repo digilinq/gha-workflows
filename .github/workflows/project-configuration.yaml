@@ -13,6 +13,9 @@ on:
       java-version:
         description: The Java version
         value: ${{ jobs.config.outputs.java-version }}
+      maven-version:
+        description: The Maven version
+        value: ${{ jobs.config.outputs.maven-version }}
 
 jobs:
   config:
@@ -20,8 +23,7 @@ jobs:
     outputs:
       config: ${{ steps.extract-config.outputs.config }}
       java-version: ${{ fromJson(steps.extract-config.outputs.config).java.version }}
-      java_version: ${{ fromJson(steps.extract-config.outputs.config).java.version }}
-      maven_version: ${{ fromJson(steps.extract-config.outputs.config).maven.version }}
+      maven-version: ${{ fromJson(steps.extract-config.outputs.config).maven.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
