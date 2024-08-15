@@ -29,13 +29,13 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
 
-      - name: setup java
+      - name: setup java ${{ inputs.java-version }}
         uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
 
-      - name: setup Maven
+      - name: setup Maven ${{ inputs.maven-version }}
         if: ${{ inputs.maven-version != '' }}
         uses: stCarolas/setup-maven@v4.5
         with:
