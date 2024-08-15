@@ -36,7 +36,7 @@ on:
         default: 'artifact.tgz'
 
 jobs:
-  build:
+  build-maven-project:
     runs-on: ${{ inputs.runner }}
 #    env:
 #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
