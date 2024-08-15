@@ -37,6 +37,7 @@ on:
 
 jobs:
   build-maven-project:
+    name: Build maven project
     runs-on: ${{ inputs.runner }}
 #    env:
 #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,8 +70,8 @@ jobs:
           echo "Running $script"
           git config --global --add safe.directory '*'
           sh "$script"
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Copy artifact and Dockerfile
         run: |
