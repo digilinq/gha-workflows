@@ -1,11 +1,15 @@
 name: Populate project configuration
 on:
   workflow_call:
-
-  outputs:
-    config:
-      description: The project configuration
-      value: ${{ steps.extract-config.outputs.config }}
+    inputs:
+      ref:
+        description: 'Which ref to check out'
+        type: string
+        required: false
+    outputs:
+      config:
+        description: The project configuration
+        value: ${{ steps.extract-config.outputs.config }}
 
 jobs:
   config:
