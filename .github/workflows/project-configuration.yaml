@@ -9,11 +9,13 @@ on:
     outputs:
       config:
         description: The project configuration
-        value: ${{ steps.extract-config.outputs.config }}
+        value: ${{ jobs.config.outputs.config }}
 
 jobs:
   config:
     runs-on: ubuntu-latest
+    outputs:
+      config: ${{ steps.extract-config.outputs.config }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
