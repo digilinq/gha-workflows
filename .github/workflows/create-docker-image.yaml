@@ -12,6 +12,12 @@ on:
         type: string
         required: false
         default: 'artifact'
+      container-registry:
+        description: The container registry to use
+        type: string
+        required: false
+        default: 'docker.io'
+        secret: true
 #    outputs:
 
 jobs:
