@@ -5,7 +5,8 @@ on:
       runner:
         description: What build agent to use
         type: string
-        required: true
+        required: false
+        default: 'ubuntu-latest'
       ref:
         description: Which branch to check out
         type: string
@@ -39,9 +40,6 @@ jobs:
   build-maven-project:
     name: Build maven project
     runs-on: ${{ inputs.runner }}
-#    env:
-#      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
