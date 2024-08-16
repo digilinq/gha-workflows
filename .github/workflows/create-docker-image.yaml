@@ -16,6 +16,9 @@ on:
         description: The container registry to use
         type: string
         required: true
+    secrets:
+      cr-password:
+        required: true
 #    outputs:
 
 jobs:
