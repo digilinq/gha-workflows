@@ -5,7 +5,8 @@ on:
       runner:
         description: What build agent to use
         type: string
-        required: true
+        required: false
+        default: 'ubuntu-latest'
       ref:
         description: Which branch to check out
         type: string
@@ -19,16 +20,29 @@ on:
         type: string
         required: false
         default: '3.8.2'
+      docker-file:
+        description: The path to the Dockerfile
+        type: string
+        required: false
+        default: 'deployment/Dockerfile'
+      artifact-name:
+        description: The name of the artifact
+        type: string
+        required: false
+        default: 'artifact'
+      artifact-path:
+        description: The path to the artifact
+        type: string
+        required: false
+        default: 'artifact.tgz'
 
 jobs:
-  build:
+  build-maven-project:
+    name: Build maven project
     runs-on: ${{ inputs.runner }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout the code
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -37,19 +51,35 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
+#          cache: maven
 
-      - name: Setup Maven ${{ inputs.maven-version }}
+      - name: Setup Maven ${{ inputs.maven-version != '' && inputs.maven-version || '3.8.2' }}
 #        if: ${{ inputs.maven-version != '' }}
         uses: stCarolas/setup-maven@v4.5
         with:
           maven-version: ${{ inputs.maven-version != '' && inputs.maven-version || '3.8.2' }}
 
       - name: Build artifact
-        run: sh ./ci/build.sh
+        run: |
+          script="$GITHUB_WORKSPACE/ci/build.sh"
+          if [ -f "./ci/build.sh" ]; then
+            script="./ci/build.sh"
+          fi
+          echo "Running $script"
+          git config --global --add safe.directory '*'
+          sh "$script"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: upload artifact
+      - name: Copy artifact and Dockerfile
+        run: |
+          mkdir staging
+          cp ${{ inputs.artifact-path }} staging
+          cp ${{ inputs.docker-file }} staging
+
+      - name: upload artifact ${{ inputs.artifact-name }}
         uses: actions/upload-artifact@v3
         with:
-          name: build
-          path: artifact.tgz
+          name: ${{ inputs.artifact-name }}
+          path: staging
           if-no-files-found: error
