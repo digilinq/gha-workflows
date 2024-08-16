@@ -15,9 +15,7 @@ on:
       container-registry:
         description: The container registry to use
         type: string
-        required: false
-        default: 'docker.io'
-        secret: true
+        required: true
 #    outputs:
 
 jobs:
