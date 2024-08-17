@@ -20,7 +20,7 @@ on:
     secrets:
       container-registry-password:
         required: true
-    outputs:
+#    outputs:
 
 jobs:
   create-docker-image:
