@@ -15,11 +15,12 @@ on:
       container-registry:
         description: The container registry to use
         type: string
-        required: true
+        required: false
+        default: 'docker.io'
     secrets:
-      cr-password:
+      container-registry-password:
         required: true
-#    outputs:
+    outputs:
 
 jobs:
   create-docker-image:
