@@ -26,7 +26,7 @@ on:
         type: string
         required: true
     outputs:
-      docker-image-specifications:
+      docker-image:
         description: The docker image specifications
         value: ${{ toJSON(jobs.docker-image-name.outputs.docker-image) }}
 
