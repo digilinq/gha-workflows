@@ -31,7 +31,7 @@ on:
         value: ${{ toJSON(jobs.container-registry-json.outputs.specifications) }}
       json:
         description: The docker image specifications in JSON format
-        value: ${{ toJSON(jobs.container-registry-json.outputs.specifications) }}
+        value: ${{ jobs.container-registry-specifications.outputs.json }}
 
 jobs:
   container-registry-specifications:
