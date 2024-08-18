@@ -45,6 +45,7 @@ jobs:
       registry: ${{ steps.docker-image.outputs.registry }}
       owner: ${{ steps.docker-image.outputs.owner }}
       image-name: ${{ steps.docker-image.outputs.image-name }}
+      json: ${{ steps.json.outputs.json }}
     steps:
       - name: Set docker image properties
         id: docker-image
@@ -66,6 +67,8 @@ jobs:
     outputs:
       specifications: ${{ steps.json.outputs.specifications }}
     steps:
+      - name: Print JSON
+        run: echo "${{ needs.container-registry-specifications.outputs.json }}"
       - name: Docker image properties
         id: json
         run: echo "specifications=$(echo '${{ toJSON(needs.container-registry-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
