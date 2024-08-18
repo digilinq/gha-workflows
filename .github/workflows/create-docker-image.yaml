@@ -35,4 +35,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact-name }}
+      - name: Print event name
+        run: echo "The event name is ${{ github.event_name }}"
 
