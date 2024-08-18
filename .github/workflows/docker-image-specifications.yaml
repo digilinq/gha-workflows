@@ -29,6 +29,9 @@ on:
       specifications:
         description: The docker image specifications
         value: ${{ toJSON(jobs.container-registry-json.outputs.specifications) }}
+      json:
+        description: The docker image specifications in JSON format
+        value: ${{ toJSON(jobs.container-registry-json.outputs.specifications) }}
 
 jobs:
   container-registry-specifications:
@@ -49,6 +52,8 @@ jobs:
           echo "registry=${{ env.REGISTRY }}" >> $GITHUB_OUTPUT
           echo "owner=${{ env.OWNER }}" >> $GITHUB_OUTPUT
           echo "image-name=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
+      - name: Print JSON
+        run: echo ${{ toJSON(steps.docker-image.outputs) }}
 
   container-registry-json:
     runs-on: ubuntu-latest
