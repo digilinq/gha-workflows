@@ -54,6 +54,8 @@ jobs:
           echo "image-name=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
       - name: Print JSON
         run: echo "${{ toJSON(steps.docker-image.outputs) }}"
+      - name: Add JSON to output
+        run: echo "json=$(echo '${{ toJSON(steps.docker-image.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
 
   container-registry-json:
     runs-on: ubuntu-latest
