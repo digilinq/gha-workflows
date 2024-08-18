@@ -12,7 +12,7 @@ on:
         type: string
         required: false
         default: 'artifact'
-      container-registry:
+      registry:
         description: The container registry to use
         type: string
         required: false
@@ -37,4 +37,10 @@ jobs:
           name: ${{ inputs.artifact-name }}
       - name: Print event name
         run: echo "The event name is ${{ github.event_name }}"
-
+      - name: Login to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ fromJSON(inputs.docker-image).registry }}
+          username: ${{ fromJSON(inputs.docker-image).owner }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
