@@ -56,16 +56,7 @@ jobs:
     outputs:
       specifications: ${{ steps.json.outputs.specifications }}
     steps:
-      - run: echo '${{ toJSON(needs.container-registry-specifications.outputs) }}'
-        shell: bash
       - name: Docker image properties
         id: json
         run: echo "specifications=$(echo '${{ toJSON(needs.container-registry-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
 
-  print-specifications:
-    name: Print docker image specifications
-    runs-on: ubuntu-latest
-    needs: [ container-registry-json ]
-    steps:
-      - name: Print docker image specifications
-        run: echo "The docker image specifications are ${{ needs.container-registry-json.outputs.specifications }}"
