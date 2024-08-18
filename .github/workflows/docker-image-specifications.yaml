@@ -1,0 +1,61 @@
+name: Populate docker image specifications
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Which ref to check out'
+        type: string
+        required: false
+      runner:
+        description: 'What build agent to use'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+      registry:
+        description: 'The container registry to use'
+        type: string
+        required: false
+        default: ghcr.io
+      owner:
+        description: 'The owner of the docker image'
+        type: string
+        required: false
+        default: ${{ github.actor }}
+      image:
+        description: 'The name of the docker image'
+        type: string
+        required: true
+    outputs:
+      docker-image-specifications:
+        description: The docker image specifications
+        value: ${{ toJSON(jobs.docker-image-name.outputs.docker-image) }}
+
+jobs:
+  docker-image-specifications:
+    name: Set docker image name
+    runs-on: ${{ inputs.runner }}
+    env:
+      REGISTRY: ${{ inputs.registry }}
+      OWNER: ${{ inputs.owner }}
+      IMAGE: ${{ inputs.image }}
+    outputs:
+      registry: ${{ steps.docker-image.outputs.registry }}
+      owner: ${{ steps.docker-image.outputs.owner }}
+      image-name: ${{ steps.docker-image.outputs.image-name }}
+    steps:
+      - name: Set docker image properties
+        id: docker-image
+        run: |
+          echo "registry=${{ env.REGISTRY }}" >> $GITHUB_OUTPUT
+          echo "owner=${{ env.OWNER }}" >> $GITHUB_OUTPUT
+          echo "image-name=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
+
+  docker-image-name:
+    runs-on: ubuntu-latest
+    needs: [ docker-image-specifications ]
+    outputs:
+      docker-image: ${{ steps.docker-image.outputs.docker-image }}
+    steps:
+      - name: Docker image properties
+        id: docker-image
+        run: echo "docker-image=$(echo '${{ toJSON(needs.docker-image-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
