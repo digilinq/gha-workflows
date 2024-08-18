@@ -56,6 +56,8 @@ jobs:
     outputs:
       specifications: ${{ steps.json.specifications }}
     steps:
+      - run: echo '${{ toJSON(needs.container-registry-specifications.outputs) }}'
+        shell: bash
       - name: Docker image properties
         id: json
         run: echo "specifications=$(echo '${{ toJSON(needs.container-registry-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
