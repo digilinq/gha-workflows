@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ container-registry-specifications ]
     outputs:
-      specifications: ${{ steps.json.specifications }}
+      specifications: ${{ steps.json.outputs.specifications }}
     steps:
       - run: echo '${{ toJSON(needs.container-registry-specifications.outputs) }}'
         shell: bash
