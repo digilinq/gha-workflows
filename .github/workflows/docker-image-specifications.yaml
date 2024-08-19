@@ -13,7 +13,7 @@ on:
         type: string
         required: false
         default: 'ubuntu-latest'
-      host:
+      registry:
         description: >-
           If you don't specify a hostname, the command uses Docker's public registry at registry-1.docker.io by default. 
           Note that docker.io is the canonical reference for Docker's public registry.
@@ -41,7 +41,7 @@ jobs:
     name: Populate docker image specifications
     runs-on: ${{ inputs.runner }}
     env:
-      HOST: ${{ inputs.host }}
+      REGISTRY: ${{ inputs.registry }}
       NAMESPACE: ${{ inputs.namespace }}
       REPOSITORY: ${{ inputs.repository }}
     outputs:
@@ -50,10 +50,10 @@ jobs:
       - name: Populate docker image specifications
         id: docker-image-specifications
         run: |
-          echo "host=${{ env.HOST }}" >> $GITHUB_OUTPUT
+          echo "registry=${{ env.REGISTRY }}" >> $GITHUB_OUTPUT
           echo "namespace=${{ env.NAMESPACE }}" >> $GITHUB_OUTPUT
           echo "repository=${{ env.REPOSITORY }}" >> $GITHUB_OUTPUT
-          echo "docker-image=${{ env.HOST }}/${{ env.NAMESPACE }}/${{ env.REPOSITORY }}" >> $GITHUB_OUTPUT
+          echo "docker-image=${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.REPOSITORY }}" >> $GITHUB_OUTPUT
       - name: Convert docker image specifications to JSON
         id: populate-json-details
         run: echo "docker-image-specifications=$(echo '${{ toJSON(steps.docker-image-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
