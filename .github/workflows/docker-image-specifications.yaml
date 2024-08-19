@@ -1,6 +1,6 @@
 # Description: This workflow is used to populate the docker image tag for a container image
 # https://docs.docker.com/reference/cli/docker/image/tag/
-name: Populate docker image tag
+name: Populate docker image specifications
 on:
   workflow_call:
     inputs:
