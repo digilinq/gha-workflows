@@ -26,10 +26,7 @@ on:
         type: string
         required: true
     outputs:
-      specifications:
-        description: The docker image specifications
-        value: ${{ toJSON(jobs.container-registry-json.outputs.specifications) }}
-      json:
+      docker:
         description: The docker image specifications in JSON format
         value: ${{ jobs.container-registry-specifications.outputs.json }}
 
@@ -42,9 +39,6 @@ jobs:
       OWNER: ${{ inputs.owner }}
       IMAGE: ${{ inputs.image }}
     outputs:
-      registry: ${{ steps.docker-image.outputs.registry }}
-      owner: ${{ steps.docker-image.outputs.owner }}
-      image-name: ${{ steps.docker-image.outputs.image-name }}
       json: ${{ steps.json.outputs.json }}
     steps:
       - name: Set docker image properties
@@ -57,15 +51,4 @@ jobs:
         id: json
         run: echo "json=$(echo '${{ toJSON(steps.docker-image.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
 
-  container-registry-json:
-    runs-on: ubuntu-latest
-    needs: [ container-registry-specifications ]
-    outputs:
-      specifications: ${{ steps.json.outputs.specifications }}
-    steps:
-      - name: Print JSON
-        run: echo "${{ needs.container-registry-specifications.outputs.json }}"
-      - name: Docker image properties
-        id: json
-        run: echo "specifications=$(echo '${{ toJSON(needs.container-registry-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
 
