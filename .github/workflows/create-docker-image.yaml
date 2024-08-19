@@ -24,12 +24,16 @@ on:
     secrets:
       container-registry-password:
         required: true
-#    outputs:
-
+    outputs:
+      docker-image:
+        description: Docker image which pushed to the registry
+        value: ${{ jobs.create-docker-image.outputs.docker-image }}
 jobs:
   create-docker-image:
     name: Create docker image
     runs-on: ${{ inputs.runner }}
+    outputs:
+      docker-image: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v3
