@@ -44,7 +44,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ fromJSON(inputs.docker-image).registry }}
-          username: ${{ fromJSON(inputs.docker-image).owner }}
+          username: ${{ fromJSON(inputs.docker-image).namespace }}
           password: ${{ secrets.container-registry-password }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
