@@ -1,0 +1,59 @@
+# Description: This workflow is used to populate the docker image tag for a container image
+# https://docs.docker.com/reference/cli/docker/image/tag/
+name: Populate docker image tag
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Which ref to check out'
+        type: string
+        required: false
+      runner:
+        description: 'What build agent to use'
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+      host:
+        description: >-
+          If you don't specify a hostname, the command uses Docker's public registry at registry-1.docker.io by default. 
+          Note that docker.io is the canonical reference for Docker's public registry.
+        type: string
+        required: false
+        default: 'ghcr.io'
+      namespace:
+        description: >-
+          Represent a user's or an organization's namespace.
+          When the namespace is not present, Docker uses library as the default namespace.
+        type: string
+        required: false
+        default: ${{ github.actor }}
+      repository:
+        description: Image name
+        type: string
+        required: true
+    outputs:
+      docker:
+        description: The docker image specifications in JSON format
+        value: ${{ jobs.docker-image-specifications.outputs.docker-image-specifications }}
+
+jobs:
+  docker-image-specifications:
+    name: Populate docker image specifications
+    runs-on: ${{ inputs.runner }}
+    env:
+      HOST: ${{ inputs.host }}
+      NAMESPACE: ${{ inputs.namespace }}
+      REPOSITORY: ${{ inputs.repository }}
+    outputs:
+      docker-image-specifications: ${{ steps.populate-json-details.outputs.docker-image-specifications }}
+    steps:
+      - name: Populate docker image specifications
+        id: docker-image-specifications
+        run: |
+          echo "host=${{ env.HOST }}" >> $GITHUB_OUTPUT
+          echo "namespace=${{ env.NAMESPACE }}" >> $GITHUB_OUTPUT
+          echo "repository=${{ env.REPOSITORY }}" >> $GITHUB_OUTPUT
+          echo "docker-image=${{ env.HOST }}/${{ env.NAMESPACE }}/${{ env.REPOSITORY }}" >> $GITHUB_OUTPUT
+      - name: Convert docker image specifications to JSON
+        id: populate-json-details
+        run: echo "docker-image-specifications=$(echo '${{ toJSON(steps.docker-image-specifications.outputs) }}' | jq -c '.')" >> $GITHUB_OUTPUT
