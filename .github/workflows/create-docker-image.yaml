@@ -49,4 +49,4 @@ jobs:
         with:
           registry: ${{ fromJSON(inputs.docker-image).registry }}
           username: ${{ fromJSON(inputs.docker-image).owner }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          password: ${{ secrets.container-registry-password }}
