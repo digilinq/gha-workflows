@@ -1,0 +1,56 @@
+name: Deploy to Kubernetes
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: What build agent to use
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+      ref:
+        description: 'Which ref to check out'
+        type: string
+        required: false
+      image:
+        description: 'The image to deploy'
+        type: string
+        required: true
+      namespace:
+        description: 'The namespace to deploy to'
+        type: string
+        required: true
+#      images:
+#        type: array
+#        description: 'The images to deploy'
+#        required: false
+    secrets:
+      kubernetes-url:
+        required: true
+      kubernetes-secret:
+        required: true
+
+jobs:
+  kubernetes-deploy:
+    name: Deploy to Kubernetes
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Set the Kubernetes context
+        uses: azure/k8s-set-context@v3
+        with:
+          method: service-account
+          k8s-url: ${{ secrets.kubernetes-url }}
+          k8s-secret: ${{ secrets.kubernetes-secret }}
+      - name: Deploy to the Kubernetes cluster
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: ${{ inputs.namespace }}
+          manifests: |
+            manifests/deployment.yml
+            manifests/service.yaml
+          #            manifests/servicemonitor.yaml
+          images: |
+            ${{ inputs.image }}

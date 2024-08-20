@@ -1,0 +1,73 @@
+name: Create docker image
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: What build agent to use
+        type: string
+        required: false
+        default: 'ubuntu-latest'
+      artifact-name:
+        description: The name of the artifact
+        type: string
+        required: false
+        default: 'artifact'
+      registry:
+        description: The container registry to use
+        type: string
+        required: false
+        default: 'docker.io'
+      docker-image:
+        description: The name of the docker image
+        type: string
+        required: true
+    secrets:
+      container-registry-password:
+        required: true
+    outputs:
+      docker-image:
+        description: Docker image which pushed to the registry
+        value: ${{ jobs.create-docker-image.outputs.docker-image }}
+jobs:
+  create-docker-image:
+    name: Create docker image
+    runs-on: ${{ inputs.runner }}
+    outputs:
+      docker-image: ${{ steps.meta.outputs.tags }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+      - name: Print event name
+        run: echo "The event name is ${{ github.event_name }}"
+      - name: Print docker image
+        run: echo "The docker image is ${{ inputs.docker-image }}"
+      - name: Login to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ fromJSON(inputs.docker-image).registry }}
+          username: ${{ fromJSON(inputs.docker-image).namespace }}
+          password: ${{ secrets.container-registry-password }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ fromJSON(inputs.docker-image).docker-image }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ inputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.version }}
+            type=semver,pattern={{major}},value=${{ inputs.version }}
+            type=ref,event=branch,suffix=-{{ sha }}
+            type=ref,event=pr
+          flavor: |
+            latest=auto
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

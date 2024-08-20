@@ -51,7 +51,7 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
-#          cache: maven
+          cache: maven
 
       - name: Setup Maven ${{ inputs.maven-version != '' && inputs.maven-version || '3.8.2' }}
 #        if: ${{ inputs.maven-version != '' }}
