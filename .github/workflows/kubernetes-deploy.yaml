@@ -18,8 +18,7 @@ on:
       namespace:
         description: 'The namespace to deploy to'
         type: string
-        required: false
-        default: 'tech-innovative'
+        required: true
 #      images:
 #        type: array
 #        description: 'The images to deploy'
@@ -48,7 +47,7 @@ jobs:
       - name: Deploy to the Kubernetes cluster
         uses: azure/k8s-deploy@v4
         with:
-          namespace: tech-innovative
+          namespace: ${{ inputs.namespace }}
           manifests: |
             manifests/deployment.yml
             manifests/service.yaml
