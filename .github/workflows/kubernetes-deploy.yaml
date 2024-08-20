@@ -32,6 +32,7 @@ on:
 
 jobs:
   kubernetes-deploy:
+    name: Deploy to Kubernetes
     runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout
