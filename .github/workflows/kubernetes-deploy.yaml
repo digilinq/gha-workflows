@@ -45,6 +45,7 @@ jobs:
           k8s-url: ${{ secrets.kubernetes-url }}
           k8s-secret: ${{ secrets.kubernetes-secret }}
       - name: Deploy to the Kubernetes cluster
+        if: github.event_name != 'pull_request'
         uses: azure/k8s-deploy@v4
         with:
           namespace: ${{ inputs.namespace }}
