@@ -24,7 +24,7 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
-      deployment: ${{ fromJson(steps.extract-config.outputs.configuration).deployment }}
+      deployment: ${{ steps.extract-config.outputs.configuration.deployment }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
       - name: Checkout
