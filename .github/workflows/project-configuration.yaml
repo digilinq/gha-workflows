@@ -16,9 +16,9 @@ on:
       maven-version:
         description: The Maven version
         value: ${{ jobs.config.outputs.maven-version }}
-      deployment:
-        description: Deployment descriptor
-        value: ${{ jobs.config.outputs.deployment }}
+#      deployment:
+#        description: Deployment descriptor
+#        value: ${{ jobs.config.outputs.deployment }}
       kubernetes-namespace:
         description: Kubernetes namespace to deploy
         value: ${{ jobs.config.outputs.deployment-namespace }}
@@ -29,7 +29,7 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
-      deployment: ${{ fromJSON(steps.extract-config.outputs.configuration).deployment }}
+#      deployment: ${{ fromJSON(steps.extract-config.outputs.configuration).deployment }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
       - name: Checkout
