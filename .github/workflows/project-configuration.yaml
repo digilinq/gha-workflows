@@ -24,6 +24,7 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
+      extra-info: ${{ fromJson(steps.extract-config.outputs.configuration).extra.info }}
       deployment: ${{ steps.extract-config.outputs.configuration.deployment }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
