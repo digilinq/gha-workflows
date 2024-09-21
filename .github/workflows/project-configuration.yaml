@@ -29,7 +29,7 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
-      deployment: ${{ toJSON(fromJSON(steps.extract-config.outputs.configuration).deployment) }}
+      deployment: ${{ steps.extract-config.outputs.deployment }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
       - name: Checkout
@@ -39,6 +39,7 @@ jobs:
         id: extract-config
         run: |
           echo "configuration=$(jq -c '.' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
+          echo "deployment=$(jq -c '.deployment' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
 
 #      - name: Determine effective workflow configuration
 #        uses: RoyalAholdDelhaize/tech-nl-github-workflows/.github/actions/effective-config@v1
