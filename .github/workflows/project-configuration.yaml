@@ -37,6 +37,7 @@ jobs:
       - name: Check if project configuration exists
         id: check-config
         run: |
+          ls -la .github
           if [ ! -f .github/project-config.json ]; then
             echo "::error::Project configuration file not found"
             exit 1
