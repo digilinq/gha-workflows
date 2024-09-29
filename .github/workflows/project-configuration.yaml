@@ -34,6 +34,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Check if project configuration exists
+        id: check-config
+        run: |
+          if [ ! -f .github/project-config.json ]; then
+            echo "::error::Project configuration file not found"
+            exit 1
+          fi  
       - name: Extract project configuration
         id: extract-config
         run: |
@@ -42,5 +49,6 @@ jobs:
       - name: Print configuration
         run: |
           echo "Configuration: ${{ steps.extract-config.outputs.configuration }}"
-          echo "Java version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}"
+          
+
          
