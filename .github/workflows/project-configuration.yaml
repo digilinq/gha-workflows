@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       config: ${{ steps.extract-config.outputs.configuration }}
+      java: ${{ fromJson(steps.extract-config.outputs.configuration).java }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
