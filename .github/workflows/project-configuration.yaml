@@ -33,11 +33,14 @@ jobs:
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
       - name: Extract project configuration
         id: extract-config
         run: |
           echo "configuration=$(jq -c '.' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
           echo "deployment=$(jq -c '.deployment' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
-
+      - name: Print configuration
+        run: |
+          echo "Configuration: ${{ steps.extract-config.outputs.configuration }}"
+          echo "Java version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}"
+         
