@@ -18,10 +18,7 @@ on:
         value: ${{ jobs.config.outputs.maven-version }}
       deployment:
         description: Deployment descriptor
-        value: ${{ jobs.config.outputs.deployment }}
-      deployment-json-object:
-        description: Deployment descriptor
-        value: ${{ jobs.config.outputs.deployment-json-object }}
+        value: ${{ jobs.config.outputs.deployment }}      
       kubernetes-namespace:
         description: Kubernetes namespace to deploy
         value: ${{ jobs.config.outputs.deployment-namespace }}
@@ -32,8 +29,7 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
-      deployment: ${{ steps.extract-config.outputs.deployment }}
-      deployment-json-object: ${{ toJSON(fromJSON(steps.extract-config.outputs.configuration).deployment) }}
+      deployment: ${{ fromJson(steps.extract-config.outputs.configuration).deployment }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
       - name: Checkout
@@ -45,11 +41,3 @@ jobs:
           echo "configuration=$(jq -c '.' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
           echo "deployment=$(jq -c '.deployment' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
 
-#      - name: Determine effective workflow configuration
-#        uses: RoyalAholdDelhaize/tech-nl-github-workflows/.github/actions/effective-config@v1
-#        id: effective-config
-#
-#      - name: Create or update project configuration
-#        run: |
-#          echo "${{ steps.effective-config.outputs.config }}" > .github/workflows/project-configuration.yaml
-#        shell: bash
