@@ -19,10 +19,10 @@ on:
         description: 'The namespace to deploy to'
         type: string
         required: true
-#      images:
-#        type: array
-#        description: 'The images to deploy'
-#        required: false
+      manifests:
+        description: 'The manifests to deploy'
+        type: string
+        required: true  
     secrets:
       kubernetes-url:
         required: true
@@ -49,9 +49,5 @@ jobs:
         uses: azure/k8s-deploy@v4
         with:
           namespace: ${{ inputs.namespace }}
-          manifests: |
-            manifests/deployment.yml
-            manifests/service.yaml
-          #            manifests/servicemonitor.yaml
-          images: |
-            ${{ inputs.image }}
+          manifests: ${{ inputs.manifests }}            
+          images: ${{ inputs.image }}
