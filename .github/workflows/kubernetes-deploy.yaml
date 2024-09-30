@@ -38,6 +38,8 @@ jobs:
     name: Deploy to Kubernetes
     runs-on: ${{ inputs.runner }}
     steps:
+      - name: Print manifest files
+        run: echo ${{ inputs.manifests }}
       - name: Checkout
         uses: actions/checkout@v4
         with:
