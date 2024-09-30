@@ -16,12 +16,15 @@ on:
       maven-version:
         description: The Maven version
         value: ${{ jobs.config.outputs.maven-version }}
+      github:
+        description: GitHub configuration
+        value: ${{ jobs.config.outputs.github }}
+      github-runner:
+        description: GitHub configuration
+        value: ${{ jobs.config.outputs.github-runner }}    
       deployment:
         description: Deployment descriptor
-        value: ${{ jobs.config.outputs.deployment }}
-      deployment-json-object:
-        description: Deployment descriptor
-        value: ${{ jobs.config.outputs.deployment-json-object }}
+        value: ${{ jobs.config.outputs.deployment }}      
       kubernetes-namespace:
         description: Kubernetes namespace to deploy
         value: ${{ jobs.config.outputs.deployment-namespace }}
@@ -32,24 +35,26 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
-      deployment: ${{ steps.extract-config.outputs.deployment }}
-      deployment-json-object: ${{ toJSON(fromJSON(steps.extract-config.outputs.configuration).deployment) }}
+      github: ${{ toJson(fromJson(steps.extract-config.outputs.configuration).github) }}
+      github-runner: ${{ fromJson(steps.extract-config.outputs.configuration).github.runner }}
+      deployment: ${{ toJson(fromJson(steps.extract-config.outputs.configuration).deployment) }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+      - name: Check if project configuration exists
+        id: check-config
+        run: |
+          if [ ! -f .github/project-config.json ]; then
+            echo "::error::Project configuration file not found"
+            exit 1
+          fi  
       - name: Extract project configuration
         id: extract-config
         run: |
           echo "configuration=$(jq -c '.' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
           echo "deployment=$(jq -c '.deployment' '.github/project-config.json')" >> "$GITHUB_OUTPUT"
 
-#      - name: Determine effective workflow configuration
-#        uses: RoyalAholdDelhaize/tech-nl-github-workflows/.github/actions/effective-config@v1
-#        id: effective-config
-#
-#      - name: Create or update project configuration
-#        run: |
-#          echo "${{ steps.effective-config.outputs.config }}" > .github/workflows/project-configuration.yaml
-#        shell: bash
+  
+
+         
