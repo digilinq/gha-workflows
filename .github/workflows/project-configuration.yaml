@@ -16,6 +16,12 @@ on:
       maven-version:
         description: The Maven version
         value: ${{ jobs.config.outputs.maven-version }}
+      github:
+        description: GitHub configuration
+        value: ${{ jobs.config.outputs.github }}
+      github-runner:
+        description: GitHub configuration
+        value: ${{ jobs.config.outputs.github-runner }}    
       deployment:
         description: Deployment descriptor
         value: ${{ jobs.config.outputs.deployment }}      
@@ -29,6 +35,8 @@ jobs:
       config: ${{ steps.extract-config.outputs.configuration }}
       java-version: ${{ fromJson(steps.extract-config.outputs.configuration).java.version }}
       maven-version: ${{ fromJson(steps.extract-config.outputs.configuration).maven.version }}
+      github: ${{ toJson(fromJson(steps.extract-config.outputs.configuration).github) }}
+      github-runner: ${{ fromJson(steps.extract-config.outputs.configuration).github.runner }}
       deployment: ${{ toJson(fromJson(steps.extract-config.outputs.configuration).deployment) }}
       deployment-namespace: ${{ fromJson(steps.extract-config.outputs.configuration).deployment.namespace }}
     steps:
