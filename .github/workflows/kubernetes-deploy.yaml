@@ -19,6 +19,10 @@ on:
         description: 'The namespace to deploy to'
         type: string
         required: true
+      manifests:
+        description: 'The manifests to deploy'
+        type: string
+        required: true  
 #      images:
 #        type: array
 #        description: 'The images to deploy'
